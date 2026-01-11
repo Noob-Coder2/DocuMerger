@@ -1,0 +1,8 @@
+streamlit
+pypdf
+python-docx
+docxcompose
+tiktoken
+streamlit-sortables
+streamlit-tree-select
+requests
