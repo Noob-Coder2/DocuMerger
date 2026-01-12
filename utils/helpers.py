@@ -9,6 +9,8 @@ import time
 from typing import Optional, Tuple
 from collections import deque
 import hashlib
+import requests
+import io
 
 
 class RateLimiter:
@@ -239,3 +241,50 @@ def detect_file_encoding(file_obj) -> str:
             continue
     
     return 'utf-8'  # Default fallback
+
+
+def fetch_from_github(url):
+    """Fetches raw content from a GitHub URL and returns a BytesIO object."""
+    try:
+        # Basic URL Validation
+        if not url.startswith("http"):
+            return None, "Invalid URL format."
+        
+        # Security: Validate that URL is from GitHub domains only (prevent SSRF)
+        from urllib.parse import urlparse
+        parsed = urlparse(url)
+        allowed_domains = ['github.com', 'raw.githubusercontent.com', 'gist.github.com']
+        if not any(parsed.netloc == domain or parsed.netloc.endswith('.' + domain) for domain in allowed_domains):
+            return None, "Invalid URL. Only GitHub URLs are allowed (github.com, raw.githubusercontent.com, gist.github.com)."
+            
+        # Convert 'blob' or 'tree' (if user mistakes folder for file, though tree support needs API) to raw
+        # Case 1: Standard Blob URL -> Convert to Raw
+        # Ex: https://github.com/user/repo/blob/main/file.txt -> https://raw.githubusercontent.com/user/repo/main/file.txt
+        if "github.com" in url and "/blob/" in url:
+            url = url.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
+            
+        # Case 2: User provided a 'tree' URL (Folder) -> Not supported yet, fail gracefully
+        if "/tree/" in url:
+            return None, "Folder import not supported. Please provide a file URL."
+
+        # Case 3: Raw URL provided directly -> Use as is
+        
+        response = requests.get(url, timeout=30)
+        response.raise_for_status()
+        
+        # Validation: Check if we got an HTML page (likely an error or wrong URL type for a code file)
+        content_type = response.headers.get('Content-Type', '')
+        if 'text/html' in content_type and not url.endswith('.html'):
+            return None, "URL returned a webpage, not a file. Please ensure you are using a direct file link."
+
+        filename = url.split("/")[-1]
+        file_obj = io.BytesIO(response.content)
+        file_obj.name = filename
+        return file_obj, None # Success
+        
+    except requests.exceptions.HTTPError:
+        return None, "File not found (404) or private repo."
+    except requests.exceptions.Timeout:
+        return None, "Request timed out. Please try again."
+    except Exception as e:
+        return None, f"Error: {str(e)}"
