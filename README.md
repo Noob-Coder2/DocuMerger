@@ -37,6 +37,14 @@
 - Path traversal protection
 - URL validation (GitHub domains only)
 
+## 🌐 Live Demo
+Try it now! The application is deployed and available at:
+
+[DocuStream](https://docustream.streamlit.app/)
+
+No installation required — just visit the link and start merging documents immediately!
+
+
 ## 🏗️ Project Structure
 
 ```
@@ -327,4 +335,4 @@ For issues, questions, or contributions:
 
 ---
 
-**Built with ❤️ for developers, by developers**
+**Built with ❤️ for devs, professionals and students, by developer**
