@@ -1,11 +1,11 @@
-# DocuStream Pro - Advanced Document Consolidation Platform
+# DocuStream - Advanced Document Consolidation Platform
 
 ![DocuStream Pro](https://img.shields.io/badge/DocuStream%20Pro-Document%20Merger-blue)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-green)
 ![Streamlit](https://img.shields.io/badge/Streamlit-Web%20App-orange)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-**DocuStream Pro** is a powerful, web-based document consolidation platform that enables seamless merging of multiple files from various sources into unified output formats. Built with Streamlit, it provides an intuitive interface for developers, writers, and teams to combine code files, documents, and text content efficiently.
+**DocuStream** is a powerful, web-based document consolidation platform that enables seamless merging of multiple files from various sources into unified output formats. Built with Streamlit, it provides an intuitive interface for developers, writers, and teams to combine code files, documents, and text content efficiently.
 
 ## 🚀 Key Features
 
